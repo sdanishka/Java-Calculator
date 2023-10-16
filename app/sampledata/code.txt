@@ -1,0 +1,425 @@
+package com.example.calci;
+
+import android.os.Bundle;
+import android.view.View;
+import android.widget.Button;
+import android.widget.TextView;
+import android.widget.Toast;
+
+import androidx.appcompat.app.AppCompatActivity;
+
+import org.mozilla.javascript.Context;
+import org.mozilla.javascript.Scriptable;
+public class MainActivity extends AppCompatActivity {
+    Button oneBTN,twoBTN,threeBTN,fourBTN,fiveBTN,sixBTN,sevenBTN,eightBTN,nineBTN,zeroBTN;
+    Button delBTN, acBTN,equalBTN;
+    Button addBTN,subBTN,mulBTN,divBTN,modBTN;
+
+    String num1;
+
+    public String eval(String equation){
+        Context cx = Context.enter();
+        Scriptable scope = cx.initStandardObjects();
+        Object result = cx.evaluateString(scope, equation, "JavaScript", 1, null);
+//        System.out.println(result); // prints: 20
+        Context.exit();
+        String res = result.toString();
+        return res;
+    }
+    @Override
+    protected void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        setContentView(R.layout.activity_main);
+
+//        TextView ResArea;
+//        ResArea = findViewById(R.id.finalResultArea);
+
+        delBTN = findViewById(R.id.delBTN);
+        delBTN.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                TextView tv;
+                tv = findViewById(R.id.resultAREA);
+                String s =  tv.getText().toString();
+                if (s.length()==0){
+                    tv.setText("");
+                    Toast.makeText(MainActivity.this, "NOTHING TO DELETE", Toast.LENGTH_SHORT).show();
+                }
+                else {
+                    String newStr = s.substring(0, s.length() - 1);
+                    tv.setText(newStr);
+                    Toast.makeText(MainActivity.this, "Deleted", Toast.LENGTH_SHORT).show();
+                }
+            }
+        });
+
+        acBTN = findViewById(R.id.acBTN);
+        acBTN.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                TextView TV,fTV;
+                TV = findViewById(R.id.resultAREA);
+                fTV = findViewById(R.id.finalResultArea);
+                String s =  TV.getText().toString();
+                if (s.length()==0){
+                    TV.setText("");
+                    fTV.setText("");
+//                    Toast.makeText(MainActivity.this, "ALREADY EMPTY", Toast.LENGTH_SHORT).show();
+                }else {
+                    TV.setText("");
+                    fTV.setText("");
+                    Toast.makeText(MainActivity.this, "All Cleared", Toast.LENGTH_SHORT).show();
+                }
+            }
+        });
+
+        equalBTN = findViewById(R.id.equalBTN);
+        equalBTN.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                TextView equalTV;
+                equalTV = findViewById(R.id.resultAREA);
+                String s = equalTV.getText().toString();
+                TextView res;
+                res = findViewById(R.id.finalResultArea);
+
+                String n1,n2;
+                int temp;
+                n1 = num1;
+                temp = n1.length();
+                String op;
+                op = s.substring(temp,temp+1);
+                n2 = s.substring(temp+1,s.length());
+                switch (op){
+                    case "+":
+                        int addnum1 = (Integer.parseInt(n1));
+                        int addnum2 = (Integer.parseInt(n2));
+                        int add = addnum1+addnum2;
+                        String preRes = res.getText().toString();
+                        if(preRes.length()<=0){
+                            String addResS = Integer.toString(add);
+                            equalTV.setText("");
+                            res.setText(addResS);
+                        }else{
+                            int preRES = Integer.parseInt(res.getText().toString());
+                            String addRes = Integer.toString((preRES+add));
+                            equalTV.setText("");
+                            res.setText(addRes);
+                        }
+                        break;
+                    case "-":
+                        int subNum1 = (Integer.parseInt(n1));
+                        int subNum2 = (Integer.parseInt(n2));
+                        int sub = subNum1-subNum2;
+                        String preSubRes = res.getText().toString();
+                        if(preSubRes.length()<=0){
+                            String subRes = Integer.toString(sub);
+                            equalTV.setText("");
+                            res.setText(subRes);
+                        }else{
+                            int preSubRES = Integer.parseInt(res.getText().toString());
+                            String subRes = Integer.toString((preSubRES+sub));
+                            equalTV.setText("");
+                            res.setText(subRes);
+                        }
+
+                        break;
+                    case "*":
+                        int mulNum1 = (Integer.parseInt(n1));
+                        int mulNum2 = (Integer.parseInt(n2));
+                        int mul = mulNum1*mulNum2;
+                        String preMulRes = res.getText().toString();
+                        if(preMulRes.length()<=0){
+                            String mulRes = Integer.toString(mul);
+                            equalTV.setText("");
+                            res.setText(mulRes);
+                        }else {
+                            int preMulRES = Integer.parseInt(res.getText().toString());
+                            String mulRes = Integer.toString((preMulRES+mul));
+                            equalTV.setText("");
+                            res.setText(mulRes);
+                        }
+                        break;
+                    case "/":
+                        int divNum1 = (Integer.parseInt(n1));
+                        int divNum2 = (Integer.parseInt(n2));
+                        if (divNum2==0){
+                            Toast.makeText(MainActivity.this, "Cannot divide Num By zero...", Toast.LENGTH_SHORT).show();
+                            equalTV.setText("");
+                            res.setText("");
+                            break;
+                        }else {
+                            int div = divNum1 / divNum2;
+                            String preDivRes = res.getText().toString();
+                            if(preDivRes.length()<=0){
+                                String divRes = Integer.toString(div);
+                                equalTV.setText("");
+                                res.setText(divRes);
+                            }else {
+                                int preDivRES = Integer.parseInt(res.getText().toString());
+                                String divRes = Integer.toString((preDivRES+div));
+                                equalTV.setText("");
+                                res.setText(divRes);
+                            }
+
+                            break;
+                        }
+                    case "%":
+                        int modNum1 = (Integer.parseInt(n1));
+                        int modNum2 = (Integer.parseInt(n2));
+                        int mod = modNum1%modNum2;
+                        String preModRes = res.getText().toString();
+                        if(preModRes.length()<=0){
+                            String modRes = Integer.toString(mod);
+                            equalTV.setText("");
+                            res.setText(modRes);
+                        }else {
+                            int preModRES = Integer.parseInt(res.getText().toString());
+                            String modRes = Integer.toString((preModRES+mod));
+                            equalTV.setText("");
+                            res.setText(modRes);
+                        }
+
+                        break;
+                    default:
+                        Toast.makeText(MainActivity.this, "NOT VALID OP", Toast.LENGTH_SHORT).show();
+                }
+//                Toast.makeText(MainActivity.this, str1, Toast.LENGTH_SHORT).show();
+            }
+        });
+
+        oneBTN = findViewById(R.id.oneBTN);
+        oneBTN.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                String one = oneBTN.getText().toString();
+                TextView oneTV;
+                oneTV = findViewById(R.id.resultAREA);
+                String og =  oneTV.getText().toString();
+                oneTV.setText(og+one);
+
+//                String s =  oneTV.getText().toString();
+
+//                Toast.makeText(MainActivity.this, s, Toast.LENGTH_SHORT).show();
+            }
+        });
+
+        twoBTN = findViewById(R.id.twoBTN);
+        twoBTN.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                String two = twoBTN.getText().toString();
+                TextView twoTV;
+                twoTV = findViewById(R.id.resultAREA);
+                String og =  twoTV.getText().toString();
+                twoTV.setText(og+two);
+//                String s =  oneTV.getText().toString();
+
+//                Toast.makeText(MainActivity.this, s, Toast.LENGTH_SHORT).show();
+            }
+        });
+
+        threeBTN = findViewById(R.id.threeBTN);
+        threeBTN.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                String three = threeBTN.getText().toString();
+                TextView threeTV;
+                threeTV = findViewById(R.id.resultAREA);
+                String og =  threeTV.getText().toString();
+                threeTV.setText(og+three);
+//                String s =  oneTV.getText().toString();
+
+//                Toast.makeText(MainActivity.this, s, Toast.LENGTH_SHORT).show();
+            }
+        });
+
+        fourBTN = findViewById(R.id.fourBTN);
+        fourBTN.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                String four = fourBTN.getText().toString();
+                TextView fourTV;
+                fourTV = findViewById(R.id.resultAREA);
+                String og =  fourTV.getText().toString();
+                fourTV.setText(og+four);
+//                String s =  oneTV.getText().toString();
+
+//                Toast.makeText(MainActivity.this, s, Toast.LENGTH_SHORT).show();
+            }
+        });
+
+        fiveBTN = findViewById(R.id.fiveBTN);
+        fiveBTN.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                String five = fiveBTN.getText().toString();
+                TextView fiveTV;
+                fiveTV = findViewById(R.id.resultAREA);
+                String og =  fiveTV.getText().toString();
+                fiveTV.setText(og+five);
+//                String s =  oneTV.getText().toString();
+
+//                Toast.makeText(MainActivity.this, s, Toast.LENGTH_SHORT).show();
+            }
+        });
+
+
+        sixBTN = findViewById(R.id.sixBTN);
+        sixBTN.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                String six = sixBTN.getText().toString();
+                TextView sixTV;
+                sixTV = findViewById(R.id.resultAREA);
+                String og =  sixTV.getText().toString();
+                sixTV.setText(og+six);
+//                String s =  oneTV.getText().toString();
+
+//                Toast.makeText(MainActivity.this, s, Toast.LENGTH_SHORT).show();
+            }
+        });
+
+        sevenBTN = findViewById(R.id.sevenBTN);
+        sevenBTN.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                String seven = sevenBTN.getText().toString();
+                TextView sevenTV;
+                sevenTV = findViewById(R.id.resultAREA);
+                String og =  sevenTV.getText().toString();
+                sevenTV.setText(og+seven);
+//                String s =  oneTV.getText().toString();
+
+//                Toast.makeText(MainActivity.this, s, Toast.LENGTH_SHORT).show();
+            }
+        });
+
+        eightBTN = findViewById(R.id.eightBTN);
+        eightBTN.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                String eight = eightBTN.getText().toString();
+                TextView eightTV;
+                eightTV = findViewById(R.id.resultAREA);
+                String og =  eightTV.getText().toString();
+                eightTV.setText(og+eight);
+//                String s =  oneTV.getText().toString();
+
+//                Toast.makeText(MainActivity.this, s, Toast.LENGTH_SHORT).show();
+            }
+        });
+
+        nineBTN = findViewById(R.id.nineBTN);
+        nineBTN.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                String nine = nineBTN.getText().toString();
+                TextView nineTV;
+                nineTV = findViewById(R.id.resultAREA);
+                String og =  nineTV.getText().toString();
+                nineTV.setText(og+nine);
+//                String s =  oneTV.getText().toString();
+
+//                Toast.makeText(MainActivity.this, s, Toast.LENGTH_SHORT).show();
+            }
+        });
+
+        zeroBTN = findViewById(R.id.zeroBTN);
+        zeroBTN.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                String zero = zeroBTN.getText().toString();
+                TextView zeroTV;
+                zeroTV = findViewById(R.id.resultAREA);
+                String og =  zeroTV.getText().toString();
+                zeroTV.setText(og+zero);
+//                String s =  oneTV.getText().toString();
+
+//                Toast.makeText(MainActivity.this, s, Toast.LENGTH_SHORT).show();
+            }
+        });
+//========================================
+        addBTN = findViewById(R.id.addBTN);
+        addBTN.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                String add = addBTN.getText().toString();
+                TextView addTV;
+                addTV = findViewById(R.id.resultAREA);
+                String og =  addTV.getText().toString();
+                addTV.setText(og+add);
+                num1 = og;
+//                String s =  oneTV.getText().toString();
+
+//                Toast.makeText(MainActivity.this, og, Toast.LENGTH_SHORT).show();
+            }
+        });
+
+        subBTN = findViewById(R.id.subBTN);
+        subBTN.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                String sub = subBTN.getText().toString();
+                TextView subTV;
+                subTV = findViewById(R.id.resultAREA);
+                String og =  subTV.getText().toString();
+                subTV.setText(og+sub);
+                num1 = og;
+//                String s =  oneTV.getText().toString();
+
+//                Toast.makeText(MainActivity.this, s, Toast.LENGTH_SHORT).show();
+            }
+        });
+
+        mulBTN = findViewById(R.id.mulBTN);
+        mulBTN.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                String mul = mulBTN.getText().toString();
+                TextView mulTV;
+                mulTV = findViewById(R.id.resultAREA);
+                String og =  mulTV.getText().toString();
+                mulTV.setText(og+mul);
+                num1 = og;
+//                String s =  oneTV.getText().toString();
+
+//                Toast.makeText(MainActivity.this, s, Toast.LENGTH_SHORT).show();
+            }
+        });
+
+        divBTN = findViewById(R.id.divBTN);
+        divBTN.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                String div = divBTN.getText().toString();
+                TextView divTV;
+                divTV = findViewById(R.id.resultAREA);
+                String og =  divTV.getText().toString();
+                divTV.setText(og+div);
+                num1 = og;
+//                String s =  oneTV.getText().toString();
+
+//                Toast.makeText(MainActivity.this, s, Toast.LENGTH_SHORT).show();
+            }
+        });
+
+        modBTN = findViewById(R.id.modBTN);
+        modBTN.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                String mod = modBTN.getText().toString();
+                TextView modTV;
+                modTV = findViewById(R.id.resultAREA);
+                String og =  modTV.getText().toString();
+                modTV.setText(og+mod);
+                num1 = og;
+//                String s =  oneTV.getText().toString();
+
+//                Toast.makeText(MainActivity.this, s, Toast.LENGTH_SHORT).show();
+            }
+        });
+
+    }
+
+}
